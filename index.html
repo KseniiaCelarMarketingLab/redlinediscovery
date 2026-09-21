@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; } body { margin: 0; overflow-x: hidden; background: #eaf2f6; font-family: 'Open Sans', system-ui, sans-serif; color: #2b3a42; -webkit-font-smoothing: antialiased; }
+  a { color: #a21c26; text-decoration: none; }
+  a:hover { color: #131d22; }
+  input, textarea, select, button { font-family: inherit; font-size: inherit; }
+  ::placeholder { color: #8ba3af; }
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+
+<div style="min-height:100vh;background:#eaf2f6">
+
+  <header style="position:sticky;top:0;z-index:50;background:rgba(234,242,246,0.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(90,116,132,0.16)">
+    <div style="max-width:1180px;margin:0 auto;padding:12px clamp(18px,3vw,28px);display:flex;align-items:center;justify-content:space-between;gap:20px">
+      <img src="redline-logo.png" alt="Redline Discovery" style="height:clamp(36px,5vw,46px);width:auto;display:block;cursor:pointer" onClick="{{ goHome }}" />
+      <sc-if value="{{ isDesktopNav }}" hint-placeholder-val="{{ true }}">
+        <nav aria-label="Main" style="display:flex;align-items:center;gap:clamp(14px,1.8vw,26px);flex-wrap:wrap;justify-content:flex-end">
+          <sc-for list="{{ nav }}" as="item" hint-placeholder-count="7">
+            <button type="button" aria-current="{{ item.current }}" style="background:none;border:none;font-size:15px;color:{{ item.color }};font-weight:{{ item.weight }};cursor:pointer;padding:12px 2px;border-bottom:2px solid {{ item.line }};white-space:nowrap" style-hover="color:#131d22" style-focus="outline:2px solid #5a7484;outline-offset:3px" onClick="{{ item.go }}">{{ item.label }}</button>
+          </sc-for>
+          <button type="button" style="background:#a21c26;color:#ffffff;border:none;font-size:15px;font-weight:700;padding:13px 22px;border-radius:999px;cursor:pointer;white-space:nowrap;min-height:44px" style-hover="background:#131d22" style-focus="outline:2px solid #131d22;outline-offset:3px" onClick="{{ goDemo }}">Book a Demo</button>
+        </nav>
+      </sc-if>
+      <sc-if value="{{ isMobileNav }}">
+        <button type="button" aria-label="Menu" aria-expanded="{{ menuExpanded }}" style="display:inline-flex;flex-direction:column;justify-content:center;gap:5px;width:48px;height:48px;padding:0 12px;background:none;border:1px solid rgba(90,116,132,0.3);border-radius:12px;cursor:pointer" style-focus="outline:2px solid #5a7484;outline-offset:3px" onClick="{{ toggleMenu }}">
+          <span style="display:block;height:2px;background:#131d22;border-radius:2px"></span>
+          <span style="display:block;height:2px;background:#131d22;border-radius:2px"></span>
+          <span style="display:block;height:2px;background:#131d22;border-radius:2px"></span>
+        </button>
+      </sc-if>
+    </div>
+    <sc-if value="{{ menuOpen }}">
+      <nav aria-label="Main" style="border-top:1px solid rgba(90,116,132,0.16);background:#eaf2f6;padding:10px 18px 22px;display:flex;flex-direction:column">
+        <sc-for list="{{ nav }}" as="item" hint-placeholder-count="7">
+          <button type="button" aria-current="{{ item.current }}" style="text-align:left;background:none;border:none;border-bottom:1px solid rgba(90,116,132,0.14);font-size:18px;color:{{ item.color }};font-weight:{{ item.weight }};cursor:pointer;padding:16px 6px;min-height:52px" style-focus="outline:2px solid #5a7484;outline-offset:-2px" onClick="{{ item.go }}">{{ item.label }}</button>
+        </sc-for>
+        <button type="button" style="margin-top:18px;background:#a21c26;color:#ffffff;border:none;font-size:17px;font-weight:700;padding:16px;border-radius:999px;cursor:pointer;min-height:52px" style-hover="background:#131d22" onClick="{{ goDemo }}">Book a Demo</button>
+      </nav>
+    </sc-if>
+  </header>
+
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div>
+
+    <section style="position:relative;overflow:hidden;background:linear-gradient(180deg,#eef2f4 0%,#e4edf1 100%)">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(to right,rgba(90,116,132,0.09) 1px,transparent 1px),linear-gradient(to bottom,rgba(90,116,132,0.09) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(120% 90% at 20% 10%,#000 0%,transparent 72%);pointer-events:none"></div>
+      <div style="position:absolute;top:-18%;right:-6%;width:52vw;height:52vw;max-width:760px;max-height:760px;border-radius:50%;background:radial-gradient(circle,rgba(162,28,38,0.16) 0%,rgba(162,28,38,0) 68%);pointer-events:none"></div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(56px,7vw,96px) clamp(18px,3vw,28px) 72px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;align-items:center">
+        <div>
+          <div style="display:inline-flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#5a7484;border:1px solid rgba(90,116,132,0.3);border-radius:999px;padding:7px 14px;margin-bottom:28px;white-space:nowrap">
+            <span style="width:7px;height:7px;border-radius:50%;background:#a21c26;display:inline-block"></span>
+            The Hague · London · Calgary
+          </div>
+          <div style="width:64px;height:3px;background:#a21c26;margin:0 0 22px;border-radius:2px"></div>
+          <h1 style="font-size:clamp(38px,5.4vw,62px);line-height:1.04;letter-spacing:-0.03em;font-weight:800;color:#131d22;margin:0 0 24px;text-wrap:pretty">Supporting good people doing good things</h1>
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:17px;line-height:1.7;color:#4a5c66;margin:0 0 36px;max-width:520px"><span style="color:#131d22;font-weight:600">Accelerate justice &amp; accountability</span> with a unified investigation environment</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:14px;background:#5a7484;color:#ffffff;font-size:17px;font-weight:700;padding:16px 20px 16px 30px;border-radius:999px;cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center" style-hover="background:#131d22" onClick="{{ goProduct }}">
+              Explore
+              <span style="width:34px;height:34px;border-radius:50%;background:#ffffff;color:#5a7484;display:inline-flex;align-items:center;justify-content:center;font-size:17px">→</span>
+            </span>
+            <span style="font-size:16px;font-weight:600;color:#5a7484;padding:16px 26px;border:1px solid rgba(90,116,132,0.35);border-radius:999px;cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center" style-hover="border-color:#131d22;color:#131d22" onClick="{{ goDemo }}">Request a demo</span>
+          </div>
+          <sc-if value="{{ showAward }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-top:40px;display:flex;align-items:center;gap:12px">
+              <span style="background:#a21c26;color:#ffffff;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.08em;padding:7px 12px;border-radius:4px">WINNER · NBCC TECH AI AWARD 2025</span>
+              <span style="font-size:13px;color:#5a7484">Sponsors: BSI · DLA Piper · Meta</span>
+            </div>
+          </sc-if>
+        </div>
+        <div style="position:relative;display:flex;align-items:center;justify-content:flex-end;min-width:0">
+          <div style="position:absolute;inset:6% 2% 6% 2%;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,0.85) 0%,rgba(255,255,255,0) 70%);pointer-events:none"></div>
+          <div style="position:relative;width:100%;aspect-ratio:4/3;overflow:hidden">
+            <img src="./hero-magnifier-v2.png" alt="Investigative imagery under magnification" style="display:block;position:absolute;top:50%;left:50%;width:168%;height:168%;object-fit:contain;transform:translate(-50%,-50%);transition:transform 700ms cubic-bezier(0.22,0.61,0.36,1)" style-hover="transform:translate(-50%,-50%) scale(1.04)" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#dfeaf0;padding:0 clamp(18px,3vw,28px) clamp(52px,6.5vw,88px)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px">
+        <div style="background:#fbfdfe;border:1px solid rgba(90,116,132,0.14);border-radius:18px;padding:clamp(24px,3.2vw,34px) clamp(22px,3vw,30px)">
+          <h3 style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#131d22;margin:0 0 18px;line-height:1.4"><span style="color:#a21c26">{</span>Expert Data Consultancy<span style="color:#a21c26">}</span></h3>
+          <p style="font-size:17px;line-height:1.6;color:#4a5c66;margin:0">Let our programmers, data experts, solution architects &amp; investigation practitioners work together to support your complex investigation needs</p>
+        </div>
+        <div style="background:#fbfdfe;border:1px solid rgba(90,116,132,0.14);border-radius:18px;padding:clamp(24px,3.2vw,34px) clamp(22px,3vw,30px)">
+          <h3 style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#131d22;margin:0 0 18px;line-height:1.4"><span style="color:#a21c26">{</span>Advanced Digital Solutions<span style="color:#a21c26">}</span></h3>
+          <p style="font-size:17px;line-height:1.6;color:#4a5c66;margin:0">Choose SPOTLIGHT, our digital investigation solution to increase clarity and efficiency, enable collaboration and unlock the truth</p>
+        </div>
+        <div style="background:#fbfdfe;border:1px solid rgba(90,116,132,0.14);border-radius:18px;padding:clamp(24px,3.2vw,34px) clamp(22px,3vw,30px)">
+          <h3 style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#131d22;margin:0 0 18px;line-height:1.4"><span style="color:#a21c26">{</span>Training &amp; Investigation Support<span style="color:#a21c26">}</span></h3>
+          <p style="font-size:17px;line-height:1.6;color:#4a5c66;margin:0">Hire our experts to train your team or support your criminal or civil investigations directly</p>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#eaf2f6;padding:clamp(64px,7vw,96px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto">
+        <div style="max-width:720px;margin:0 auto 48px;text-align:center">
+          <h2 style="font-size:clamp(32px,4.4vw,50px);line-height:1.1;letter-spacing:-0.025em;font-weight:800;color:#131d22;margin:0 0 18px">Who are you investigating for?</h2>
+          <p style="font-size:19px;line-height:1.6;color:#4a5c66;margin:0">The platform is the same. The evidence rules, procurement path and reporting are not. Choose your route.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px">
+          <div style="background:#fbfdfe;border:1px solid rgba(90,116,132,0.16);border-radius:20px;padding:clamp(26px,3.5vw,38px) clamp(22px,3vw,34px);display:flex;flex-direction:column;cursor:pointer" style-hover="border-color:#a21c26" onClick="{{ goLaw }}">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#a21c26;margin-bottom:20px">Private sector</div>
+            <h3 style="font-size:30px;line-height:1.2;letter-spacing:-0.02em;font-weight:800;color:#131d22;margin:0 0 16px">Law firms &amp; private investigators</h3>
+            <p style="font-size:17px;line-height:1.65;color:#4a5c66;margin:0 0 26px">Cross-border litigation and investigations across fragmented tools, defensible evidence, multi-jurisdiction teams, and the cost of manual evidence handling.</p>
+            <div style="margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#5a7484;background:#e3eff4;border-radius:999px;padding:6px 13px">E-discovery</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#5a7484;background:#e3eff4;border-radius:999px;padding:6px 13px">Asset tracing</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#5a7484;background:#e3eff4;border-radius:999px;padding:6px 13px">Admissibility</span>
+            </div>
+            <span style="font-size:17px;font-weight:700;color:#a21c26">Go to For Law Firms →</span>
+          </div>
+          <div style="background:#131d22;border:1px solid #131d22;border-radius:20px;padding:clamp(26px,3.5vw,38px) clamp(22px,3vw,34px);display:flex;flex-direction:column;cursor:pointer" style-hover="border-color:#a21c26" onClick="{{ goPublic }}">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#85c3e8;margin-bottom:20px">Public sector</div>
+            <h3 style="font-size:30px;line-height:1.2;letter-spacing:-0.02em;font-weight:800;color:#ffffff;margin:0 0 16px">Tribunals, law enforcement &amp; civil society</h3>
+            <p style="font-size:17px;line-height:1.65;color:#c4d4dd;margin:0 0 26px">International accountability investigations, chain-of-custody suitable for tribunals, responsible AI, and training built into the engagement.</p>
+            <div style="margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#c4d4dd;background:rgba(255,255,255,0.09);border-radius:999px;padding:6px 13px">Chain-of-custody</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#c4d4dd;background:rgba(255,255,255,0.09);border-radius:999px;padding:6px 13px">OSINT</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#c4d4dd;background:rgba(255,255,255,0.09);border-radius:999px;padding:6px 13px">Field capture</span>
+            </div>
+            <span style="font-size:17px;font-weight:700;color:#85c3e8">Go to Public Sector →</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(56px,7vw,96px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto">
+        <div style="max-width:820px;margin:0 auto;text-align:center">
+          <h2 style="font-size:clamp(32px,4.4vw,50px);line-height:1.1;letter-spacing:-0.025em;font-weight:800;color:#131d22;margin:0 0 28px">Our core solution - SPOTLIGHT</h2>
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:17px;line-height:1.8;color:#4a5c66;margin:0"><span style="color:#131d22;font-weight:600">SPOTLIGHT</span> tackles ongoing challenges in investigations, enhancing case management efficiency through innovation. <span style="color:#131d22;font-weight:600">Speed up justice &amp; accountability</span> with a <span style="color:#131d22;font-weight:600">unified investigation environment</span>.</p>
+        </div>
+        <div style="margin-top:56px;border-radius:22px;overflow:hidden;border:1px solid rgba(90,116,132,0.16);box-shadow:0 40px 80px -50px rgba(19,29,34,0.55);background:#eaf2f6">
+          <img src="./spotlight-dashboard.avif" alt="SPOTLIGHT case dashboard" style="display:block;width:100%;height:auto" />
+        </div>
+        <p style="max-width:900px;margin:56px auto 0;text-align:center;font-size:20px;line-height:1.65;color:#4a5c66;text-wrap:pretty">Our advanced investigation management software simplifies the investigative process for international communities, civil society, law enforcement, and private investigators. It provides tools for organizing and tracking cases, evidence, and documents securely, while offering analytics and reporting features to identify patterns and support data-driven decisions. The platform enables real-time collaboration, integrates with existing databases, and automates tasks for improved efficiency.</p>
+      </div>
+    </section>
+
+    <section style="background:#e3eff4;padding:clamp(56px,7vw,96px) clamp(18px,3vw,28px)">
+      <div style="max-width:980px;margin:0 auto">
+        <h2 style="font-size:clamp(32px,4.4vw,50px);line-height:1.1;letter-spacing:-0.025em;font-weight:800;color:#131d22;margin:0 0 48px;text-align:center">Problems that we solve</h2>
+        <sc-if value="{{ isAccordion }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <sc-for list="{{ problems }}" as="p" hint-placeholder-count="5">
+              <div style="background:#fbfdfe;border:1px solid rgba(90,116,132,0.12);border-radius:16px;overflow:hidden">
+                <div style="display:flex;align-items:center;gap:22px;padding:24px clamp(20px,3vw,32px);cursor:pointer;min-height:64px" onClick="{{ p.toggle }}">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:#a21c26">{{ p.num }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:19px;font-weight:600;color:#131d22;flex:1"><span style="color:#a21c26">{</span>{{ p.title }}<span style="color:#a21c26">}</span></span>
+                  <span style="color:#5a7484;font-size:14px">{{ p.icon }}</span>
+                </div>
+                <sc-if value="{{ p.open }}">
+                  <p style="font-family:'IBM Plex Mono',monospace;font-size:16px;line-height:1.8;color:#4a5c66;margin:0;padding:0 clamp(20px,3vw,32px) 30px clamp(20px,3vw,72px)">{{ p.body }}</p>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ isGrid }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px">
+            <sc-for list="{{ problems }}" as="p" hint-placeholder-count="5">
+              <div style="background:#fbfdfe;border:1px solid rgba(90,116,132,0.12);border-radius:16px;padding:clamp(22px,3vw,30px)">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:#a21c26;margin-bottom:14px">{{ p.num }}</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:#131d22;margin-bottom:14px;line-height:1.4"><span style="color:#a21c26">{</span>{{ p.title }}<span style="color:#a21c26">}</span></div>
+                <p style="font-size:16px;line-height:1.65;color:#4a5c66;margin:0">{{ p.body }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+
+    <section style="background:#e3eff4;padding:0 clamp(18px,3vw,28px) clamp(56px,7vw,96px)">
+      <div style="max-width:1180px;margin:0 auto">
+        <h2 style="font-size:clamp(32px,4.4vw,50px);line-height:1.1;letter-spacing:-0.025em;font-weight:800;color:#131d22;margin:0 0 48px;text-align:center">Who we are</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:22px">
+            <div style="height:280px;border-radius:18px;overflow:hidden">
+              <image-slot id="rld-who-1" shape="rect" placeholder="AI / data imagery"></image-slot>
+            </div>
+            <div style="background:#fbfdfe;border:1px solid rgba(90,116,132,0.12);border-radius:18px;padding:clamp(22px,3vw,32px)">
+              <h3 style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:#131d22;margin:0 0 18px">Redline Discovery Ltd <span style="color:#a21c26">{RLD}</span></h3>
+              <p style="font-size:17px;line-height:1.65;color:#4a5c66;margin:0">Redline Discovery {RLD} is a software &amp; investigations company founded by experts to tackle modern investigative challenges. We created SPOTLIGHT to enhance investigation processes and align AI innovations with global justice practices.</p>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:22px">
+            <div style="background:#fbfdfe;border:1px solid rgba(90,116,132,0.12);border-radius:18px;padding:clamp(22px,3vw,32px)">
+              <p style="font-size:17px;line-height:1.65;color:#4a5c66;margin:0">Collaborating with specialists in investigations &amp; law, we continuously refine our solutions to address persistent issues in international accountability investigations. Our focus is on developing tailored solutions that meet investigative needs, rather than generic marketing approaches.</p>
+            </div>
+            <div style="height:300px;border-radius:18px;overflow:hidden">
+              <image-slot id="rld-who-2" shape="rect" placeholder="Workspace imagery"></image-slot>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:22px">
+            <div style="height:260px;border-radius:18px;overflow:hidden">
+              <image-slot id="rld-who-3" shape="rect" placeholder="Team / technology imagery"></image-slot>
+            </div>
+            <div style="background:#fbfdfe;border:1px solid rgba(90,116,132,0.12);border-radius:18px;padding:clamp(22px,3vw,32px)">
+              <p style="font-size:17px;line-height:1.65;color:#4a5c66;margin:0">We prioritize working with clients to innovate &amp; enhance our offerings, ensuring the best integration of field collection, case management, and analytical practices. Our goal is to solve real-world challenges in real-time using cutting-edge technologies.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(56px,7vw,96px) clamp(18px,3vw,28px)">
+      <div style="max-width:900px;margin:0 auto;text-align:center">
+        <h2 style="font-size:clamp(32px,4.4vw,50px);line-height:1.1;letter-spacing:-0.025em;font-weight:800;color:#131d22;margin:0 0 28px">All in one place</h2>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:17px;line-height:1.8;color:#4a5c66;margin:0">A complete range of <span style="color:#131d22;font-weight:600">investigation management, analysis,</span> and <span style="color:#131d22;font-weight:600">legal solutions</span> for your operational, strategic, and administrative needs</p>
+      </div>
+      <div style="max-width:1180px;margin:52px auto 0;aspect-ratio:16/6;min-height:240px;border-radius:22px;overflow:hidden">
+        <image-slot id="rld-allinone" shape="rect" placeholder="Platform overview imagery"></image-slot>
+      </div>
+    </section>
+
+    <div>
+      <dc-import name="RLD-CTA" hint-size="100%,900px"></dc-import>
+    </div>
+
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isLaw }}">
+  <div>
+    <section style="background:linear-gradient(180deg,#eaf2f6 0%,#dfeaf0 100%);padding:clamp(52px,6.5vw,88px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:56px;align-items:center">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#a21c26;margin-bottom:22px">For law firms · UK &amp; Europe</div>
+          <h1 style="font-size:clamp(36px,5vw,56px);line-height:1.06;letter-spacing:-0.03em;font-weight:800;color:#131d22;margin:0 0 24px;text-wrap:pretty">Discovery that holds up across borders</h1>
+          <p style="font-size:20px;line-height:1.65;color:#4a5c66;margin:0 0 34px;max-width:560px">A single environment for cross-border litigation and investigations: e-discovery, financial records, OSINT and digital evidence, with a chain-of-custody suitable for international tribunals and court proceedings.</p>
+          <span style="display:inline-block;background:#a21c26;color:#ffffff;font-size:17px;font-weight:700;padding:16px 30px;border-radius:999px;cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center" style-hover="background:#131d22" onClick="{{ goDemo }}">Book a demo</span>
+        </div>
+        <div style="min-height:300px;aspect-ratio:4/3;border-radius:22px;overflow:hidden;box-shadow:0 30px 70px -40px rgba(19,29,34,0.5)">
+          <image-slot id="rld-law-hero" shape="rect" placeholder="Law-firm workflow screenshot"></image-slot>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(52px,6.5vw,88px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto">
+        <h2 style="font-size:clamp(30px,3.8vw,42px);line-height:1.12;letter-spacing:-0.02em;font-weight:800;color:#131d22;margin:0 0 44px">What we hear from litigation and investigations teams</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px">
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#a21c26;margin-bottom:14px">01</div>
+            <p style="font-size:17px;line-height:1.6;color:#2b3a42;margin:0">Managing cross-border litigation and investigations across fragmented tools - e-discovery, financial records, OSINT, digital evidence - without a unified system.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#a21c26;margin-bottom:14px">02</div>
+            <p style="font-size:17px;line-height:1.6;color:#2b3a42;margin:0">Ensuring evidence and analysis remain defensible and admissible - chain-of-custody, explainability of AI-assisted findings.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#a21c26;margin-bottom:14px">03</div>
+            <p style="font-size:17px;line-height:1.6;color:#2b3a42;margin:0">Coordinating multi-jurisdiction teams and external investigators or experts securely.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#a21c26;margin-bottom:14px">04</div>
+            <p style="font-size:17px;line-height:1.6;color:#2b3a42;margin:0">Reducing time and cost on manual evidence handling and transcription in complex matters.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#131d22;padding:clamp(52px,6.5vw,88px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:44px">
+        <div>
+          <h2 style="font-size:clamp(29px,3.6vw,40px);line-height:1.12;letter-spacing:-0.02em;font-weight:800;color:#ffffff;margin:0 0 20px">A modern alternative to legacy e-discovery</h2>
+          <p style="font-size:18px;line-height:1.7;color:#c4d4dd;margin:0">Redline is a specialized, ethical and independent platform built for legally defensible investigations - not a general-purpose analytical tool. Case management, financial analytics, digital evidence, OSINT and audiovisual material live in one environment.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div style="border-left:2px solid #a21c26;padding:4px 0 4px 22px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#ffffff;margin-bottom:8px">Defensible by design</div>
+            <p style="font-size:16px;line-height:1.6;color:#a9bdc8;margin:0">Chain-of-custody suitable for international tribunals and court proceedings.</p>
+          </div>
+          <div style="border-left:2px solid #a21c26;padding:4px 0 4px 22px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#ffffff;margin-bottom:8px">Explainable AI analytics</div>
+            <p style="font-size:16px;line-height:1.6;color:#a9bdc8;margin:0">Forensic AI that surfaces hidden patterns while working transparently.</p>
+          </div>
+          <div style="border-left:2px solid #a21c26;padding:4px 0 4px 22px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:#ffffff;margin-bottom:8px">Software and services</div>
+            <p style="font-size:16px;line-height:1.6;color:#a9bdc8;margin:0">Training and investigation support built in, not sold as an afterthought.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#e3eff4;padding:clamp(48px,6vw,80px) clamp(18px,3vw,28px)">
+      <div style="max-width:900px;margin:0 auto;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#5a7484;margin-bottom:20px">Case studies</div>
+        <p style="font-size:20px;line-height:1.7;color:#4a5c66;margin:0 0 28px;text-wrap:pretty">Our engagements are frequently covered by confidentiality obligations, privilege and NDAs. Cleared, anonymized case studies are published as they become available - for example, a European law firm handling a cross-border asset-tracing matter.</p>
+        <span style="display:inline-block;font-size:16px;font-weight:600;color:#5a7484;padding:14px 28px;border:1px solid rgba(90,116,132,0.4);border-radius:999px;cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center" style-hover="border-color:#131d22;color:#131d22" onClick="{{ goCases }}">Read the case studies</span>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isPublic }}">
+  <div>
+    <section style="background:#131d22;padding:clamp(56px,7vw,88px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:56px;align-items:center">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#85c3e8;margin-bottom:22px">Public sector · Tribunals, law enforcement, civil society</div>
+          <h1 style="font-size:clamp(36px,5vw,56px);line-height:1.06;letter-spacing:-0.03em;font-weight:800;color:#ffffff;margin:0 0 24px;text-wrap:pretty">Accountability work that survives scrutiny</h1>
+          <p style="font-size:20px;line-height:1.65;color:#c4d4dd;margin:0 0 34px;max-width:560px">One environment for international accountability investigations - case management, OSINT, digital evidence, audiovisual material and financial analytics, with a chain-of-custody suitable for international tribunals and court proceedings.</p>
+          <div style="display:flex;gap:14px;flex-wrap:wrap">
+            <span style="display:inline-block;background:#a21c26;color:#ffffff;font-size:17px;font-weight:700;padding:16px 30px;border-radius:999px;cursor:pointer" style-hover="background:#85c3e8;color:#131d22" onClick="{{ goDemo }}">Book a demo</span>
+            <span style="display:inline-block;font-size:16px;font-weight:600;color:#c4d4dd;padding:16px 28px;border:1px solid rgba(255,255,255,0.28);border-radius:999px;cursor:pointer" style-hover="border-color:#85c3e8;color:#ffffff" onClick="{{ goProduct }}">See the platform</span>
+          </div>
+        </div>
+        <div style="min-height:300px;aspect-ratio:4/3;border-radius:22px;overflow:hidden">
+          <image-slot id="rld-public-hero" shape="rect" placeholder="Field / tribunal context imagery"></image-slot>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(56px,7vw,88px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto">
+        <h2 style="font-size:clamp(30px,3.8vw,42px);line-height:1.12;letter-spacing:-0.02em;font-weight:800;color:#131d22;margin:0 0 44px">Built for public mandates</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px">
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#a21c26;margin-bottom:14px">01</div>
+            <p style="font-size:17px;line-height:1.6;color:#2b3a42;margin:0">Evidence collected and handled so that it holds up before international tribunals and national courts.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#a21c26;margin-bottom:14px">02</div>
+            <p style="font-size:17px;line-height:1.6;color:#2b3a42;margin:0">Ethical and forensic AI that works transparently, so AI-assisted findings can be explained and defended.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#a21c26;margin-bottom:14px">03</div>
+            <p style="font-size:17px;line-height:1.6;color:#2b3a42;margin:0">Patterns across corruption, propaganda, cybercrime and cross-border financial flows, surfaced from data of all sizes.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#a21c26;margin-bottom:14px">04</div>
+            <p style="font-size:17px;line-height:1.6;color:#2b3a42;margin:0">Training and investigation support included - we can train your team or work alongside it directly.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#e3eff4;padding:clamp(56px,7vw,88px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:48px;align-items:center">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#a21c26;margin-bottom:20px">Field deployment</div>
+          <h2 style="font-size:clamp(29px,3.6vw,40px);line-height:1.12;letter-spacing:-0.02em;font-weight:800;color:#131d22;margin:0 0 20px">Capture evidence in the moment</h2>
+          <p style="font-size:18px;line-height:1.7;color:#4a5c66;margin:0">A field-deployable extension of the platform for frontline teams - NGO field staff, humanitarian and human-rights investigators - working offline in difficult conditions.</p>
+        </div>
+        <div style="min-height:260px;aspect-ratio:4/3;border-radius:18px;overflow:hidden">
+          <image-slot id="rld-public-field" shape="rect" placeholder="Field capture imagery"></image-slot>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(48px,6vw,80px) clamp(18px,3vw,28px)">
+      <div style="max-width:900px;margin:0 auto;text-align:center">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#5a7484;margin-bottom:20px">The Hague</div>
+        <p style="font-size:20px;line-height:1.7;color:#4a5c66;margin:0 0 28px;text-wrap:pretty">We work from HSD Campus and the Hague Humanity Hub, the security and justice tech cluster, alongside Lex Collective, Integrity Initiatives International, Heartland Initiative and NBCC.</p>
+        <span style="display:inline-block;font-size:16px;font-weight:600;color:#5a7484;padding:14px 28px;border:1px solid rgba(90,116,132,0.4);border-radius:999px;cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center" style-hover="border-color:#131d22;color:#131d22" onClick="{{ goContact }}">Talk to our team</span>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isProduct }}">
+  <div>
+    <section style="background:linear-gradient(180deg,#eaf2f6 0%,#dfeaf0 100%);padding:clamp(52px,6.5vw,88px) clamp(18px,3vw,28px) clamp(48px,5vw,72px)">
+      <div style="max-width:1180px;margin:0 auto">
+        <div style="max-width:760px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#a21c26;margin-bottom:22px">The product</div>
+          <h1 style="font-size:clamp(38px,5.2vw,58px);line-height:1.05;letter-spacing:-0.03em;font-weight:800;color:#131d22;margin:0 0 24px">SPOTLIGHT</h1>
+          <p style="font-family:'IBM Plex Mono',monospace;font-size:17px;line-height:1.8;color:#4a5c66;margin:0">A unified investigation platform: case management, analytics, OSINT, digital evidence and financial data in one environment.</p>
+        </div>
+        <div style="margin-top:52px;border-radius:22px;overflow:hidden;border:1px solid rgba(90,116,132,0.16);box-shadow:0 40px 80px -50px rgba(19,29,34,0.55);background:#eaf2f6">
+          <img src="./spotlight-dashboard.avif" alt="SPOTLIGHT case dashboard" style="display:block;width:100%;height:auto" />
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(52px,6.5vw,88px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px">
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:#131d22;margin-bottom:14px"><span style="color:#a21c26">{</span>Case management<span style="color:#a21c26">}</span></div>
+            <p style="font-size:16px;line-height:1.6;color:#4a5c66;margin:0">Organize and track cases, tasks, lines of inquiry, evidence and documents securely.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:#131d22;margin-bottom:14px"><span style="color:#a21c26">{</span>Financial analytics<span style="color:#a21c26">}</span></div>
+            <p style="font-size:16px;line-height:1.6;color:#4a5c66;margin:0">Analyse cross-border financial flows alongside the rest of the case record.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:#131d22;margin-bottom:14px"><span style="color:#a21c26">{</span>OSINT &amp; digital evidence<span style="color:#a21c26">}</span></div>
+            <p style="font-size:16px;line-height:1.6;color:#4a5c66;margin:0">Open-source material, digital evidence and audiovisual files in one workspace.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:#131d22;margin-bottom:14px"><span style="color:#a21c26">{</span>Chain-of-custody<span style="color:#a21c26">}</span></div>
+            <p style="font-size:16px;line-height:1.6;color:#4a5c66;margin:0">Suitable for international tribunals and court proceedings.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:#131d22;margin-bottom:14px"><span style="color:#a21c26">{</span>Forensic AI<span style="color:#a21c26">}</span></div>
+            <p style="font-size:16px;line-height:1.6;color:#4a5c66;margin:0">Surfaces hidden patterns across corruption, propaganda, cybercrime and financial flows - working transparently.</p>
+          </div>
+          <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,30px)">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600;color:#131d22;margin-bottom:14px"><span style="color:#a21c26">{</span>Training &amp; support<span style="color:#a21c26">}</span></div>
+            <p style="font-size:16px;line-height:1.6;color:#4a5c66;margin:0">Built into the product - software plus services, not software alone.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <sc-if value="{{ showFieldKit }}" hint-placeholder-val="{{ true }}">
+    <section style="background:#131d22;padding:clamp(52px,6.5vw,88px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:48px;align-items:center">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#85c3e8;margin-bottom:20px">New track</div>
+          <h2 style="font-size:clamp(29px,3.6vw,40px);line-height:1.12;letter-spacing:-0.02em;font-weight:800;color:#ffffff;margin:0 0 20px">Evidence capture in the field</h2>
+          <p style="font-size:18px;line-height:1.7;color:#c4d4dd;margin:0">A field-deployable extension of the platform for capturing evidence in the moment - offline, in difficult field conditions.</p>
+        </div>
+        <div style="min-height:260px;aspect-ratio:4/3;border-radius:18px;overflow:hidden">
+          <image-slot id="rld-product-2" shape="rect" placeholder="Field capture imagery"></image-slot>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+    <section style="background:#e3eff4;padding:clamp(48px,6vw,80px) clamp(18px,3vw,28px);text-align:center">
+      <h2 style="font-size:clamp(28px,3.4vw,38px);line-height:1.12;letter-spacing:-0.02em;font-weight:800;color:#131d22;margin:0 0 24px">See SPOTLIGHT on your own matter</h2>
+      <span style="display:inline-block;background:#a21c26;color:#ffffff;font-size:17px;font-weight:700;padding:16px 32px;border-radius:999px;cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center" style-hover="background:#131d22" onClick="{{ goDemo }}">Book a demo</span>
+    </section>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isInsights }}">
+  <div>
+    <section style="background:linear-gradient(180deg,#eaf2f6 0%,#dfeaf0 100%);padding:clamp(52px,6.5vw,88px) clamp(18px,3vw,28px) clamp(48px,5vw,72px)">
+      <div style="max-width:900px;margin:0 auto">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#a21c26;margin-bottom:22px">Insights</div>
+        <h1 style="font-size:clamp(35px,4.8vw,54px);line-height:1.06;letter-spacing:-0.03em;font-weight:800;color:#131d22;margin:0 0 24px;text-wrap:pretty">The intersection of technology and crime</h1>
+        <p style="font-size:20px;line-height:1.65;color:#4a5c66;margin:0">Our monthly bulletin covers the evolution of OSINT, the dark web, forensic AI and anti-corruption work - written for practitioners, not for search engines.</p>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(44px,5.5vw,72px) clamp(18px,3vw,28px) 0">
+      <div style="max-width:1180px;margin:0 auto">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:28px">
+          <sc-for list="{{ topics }}" as="t" hint-placeholder-count="5">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;padding:12px 18px;border-radius:999px;cursor:pointer;min-height:44px;display:inline-flex;align-items:center;background:{{ t.bg }};color:{{ t.fg }};border:1px solid {{ t.border }}" onClick="{{ t.pick }}">{{ t.label }}</span>
+          </sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px">
+          <sc-for list="{{ articles }}" as="a" hint-placeholder-count="6">
+            <a href="{{ a.href }}" target="_blank" rel="noopener" style="background:#eaf2f6;border:1px solid rgba(90,116,132,0.14);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;color:inherit;text-decoration:none" style-hover="border-color:#a21c26" style-focus="outline:2px solid #5a7484;outline-offset:3px">
+              <div style="height:190px">
+                <image-slot id="{{ a.slot }}" shape="rect" placeholder="Article image"></image-slot>
+              </div>
+              <div style="padding:28px;display:flex;flex-direction:column;flex:1">
+                <div style="display:flex;gap:12px;align-items:center;margin-bottom:14px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase">
+                  <span style="color:#a21c26">{{ a.topic }}</span>
+                  <span style="color:#5a7484">{{ a.date }}</span>
+                </div>
+                <h3 style="font-size:22px;line-height:1.3;letter-spacing:-0.01em;font-weight:700;color:#131d22;margin:0 0 14px;text-wrap:pretty">{{ a.title }}</h3>
+                <p style="font-size:16px;line-height:1.6;color:#4a5c66;margin:0 0 22px">{{ a.excerpt }}</p>
+                <div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:12px">
+                  <span style="font-size:15px;font-weight:700;color:#a21c26">Read article -&gt;</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#5a7484">{{ a.read }}</span>
+                </div>
+              </div>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(48px,6vw,80px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">
+        <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,32px)">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#a21c26;margin-bottom:16px">Monthly bulletin</div>
+          <p style="font-size:17px;line-height:1.6;color:#4a5c66;margin:0 0 20px">Long-form analysis, published every month. Currently hosted on Medium and mirrored here.</p>
+          <a href="https://medium.com/@redlinediscovery" style="font-size:16px;font-weight:600">Read on Medium →</a>
+        </div>
+        <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,32px)">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#a21c26;margin-bottom:16px">For law firms</div>
+          <p style="font-size:17px;line-height:1.6;color:#4a5c66;margin:0">Cross-border e-discovery, chain-of-custody and admissibility, multi-jurisdiction case coordination.</p>
+        </div>
+        <div style="background:#eaf2f6;border-radius:16px;padding:clamp(22px,3vw,32px)">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:#a21c26;margin-bottom:16px">Resources</div>
+          <p style="font-size:17px;line-height:1.6;color:#4a5c66;margin:0">Whitepapers, reports and checklists for teams evaluating an investigation platform.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isCases }}">
+  <div>
+    <section style="background:linear-gradient(180deg,#eaf2f6 0%,#dfeaf0 100%);padding:clamp(56px,7vw,88px) clamp(18px,3vw,28px) 64px">
+      <div style="max-width:900px;margin:0 auto">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#a21c26;margin-bottom:22px">Case studies</div>
+        <h1 style="font-size:clamp(34px,4.8vw,54px);line-height:1.06;letter-spacing:-0.03em;font-weight:800;color:#131d22;margin:0 0 24px;text-wrap:pretty">What the work looks like in practice</h1>
+        <p style="font-size:20px;line-height:1.65;color:#4a5c66;margin:0">Most of our engagements are covered by confidentiality obligations, privilege and NDAs. The studies below are cleared and anonymized: the facts are real, the identifying details are not.</p>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(44px,5.5vw,72px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:22px">
+        <sc-for list="{{ cases }}" as="c" hint-placeholder-count="4">
+          <article style="background:#eaf2f6;border:1px solid rgba(90,116,132,0.14);border-radius:20px;padding:clamp(24px,3.5vw,36px);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:36px;align-items:start">
+            <div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px">
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#ffffff;background:{{ c.tagBg }};border-radius:999px;padding:6px 13px">{{ c.sector }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#5a7484;background:#ffffff;border-radius:999px;padding:6px 13px">{{ c.region }}</span>
+              </div>
+              <h2 style="font-size:28px;line-height:1.22;letter-spacing:-0.015em;font-weight:800;color:#131d22;margin:0 0 16px;text-wrap:pretty">{{ c.title }}</h2>
+              <p style="font-size:17px;line-height:1.65;color:#4a5c66;margin:0">{{ c.summary }}</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:18px">
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#a21c26;margin-bottom:8px">Challenge</div>
+                <p style="font-size:16px;line-height:1.6;color:#2b3a42;margin:0">{{ c.challenge }}</p>
+              </div>
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#a21c26;margin-bottom:8px">Approach</div>
+                <p style="font-size:16px;line-height:1.6;color:#2b3a42;margin:0">{{ c.approach }}</p>
+              </div>
+              <div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#a21c26;margin-bottom:8px">Outcome</div>
+                <p style="font-size:16px;line-height:1.6;color:#2b3a42;margin:0">{{ c.outcome }}</p>
+              </div>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="background:#e3eff4;padding:clamp(48px,6vw,80px) clamp(18px,3vw,28px);text-align:center">
+      <div style="max-width:760px;margin:0 auto">
+        <h2 style="font-size:clamp(28px,3.4vw,38px);line-height:1.15;letter-spacing:-0.02em;font-weight:800;color:#131d22;margin:0 0 20px">Working on something comparable?</h2>
+        <p style="font-size:18px;line-height:1.65;color:#4a5c66;margin:0 0 30px">We can walk you through a matter close to yours under NDA.</p>
+        <span style="display:inline-block;background:#a21c26;color:#ffffff;font-size:17px;font-weight:700;padding:16px 32px;border-radius:999px;cursor:pointer;min-height:48px;display:inline-flex;align-items:center;justify-content:center" style-hover="background:#131d22" onClick="{{ goContact }}">Ask about a comparable matter</span>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isAbout }}">
+  <div>
+    <section style="background:linear-gradient(180deg,#eaf2f6 0%,#dfeaf0 100%);padding:clamp(52px,6.5vw,88px) clamp(18px,3vw,28px) clamp(48px,5vw,72px)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:56px;align-items:center">
+        <div>
+          <h1 style="font-size:clamp(35px,4.8vw,54px);line-height:1.06;letter-spacing:-0.03em;font-weight:800;color:#131d22;margin:0 0 24px">Who we are</h1>
+          <h3 style="font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:#131d22;margin:0 0 18px">Redline Discovery Ltd <span style="color:#a21c26">{RLD}</span></h3>
+          <p style="font-size:18px;line-height:1.65;color:#4a5c66;margin:0 0 20px">Redline Discovery {RLD} is a software &amp; investigations company founded by experts to tackle modern investigative challenges. We created SPOTLIGHT to enhance investigation processes and align AI innovations with global justice practices.</p>
+          <p style="font-size:18px;line-height:1.65;color:#4a5c66;margin:0 0 20px">Collaborating with specialists in investigations &amp; law, we continuously refine our solutions to address persistent issues in international accountability investigations. Our focus is on developing tailored solutions that meet investigative needs, rather than generic marketing approaches.</p>
+          <p style="font-size:18px;line-height:1.65;color:#4a5c66;margin:0">We prioritize working with clients to innovate &amp; enhance our offerings, ensuring the best integration of field collection, case management, and analytical practices. Our goal is to solve real-world challenges in real-time using cutting-edge technologies.</p>
+        </div>
+        <div style="min-height:340px;aspect-ratio:3/4;border-radius:22px;overflow:hidden">
+          <image-slot id="rld-about" shape="rect" placeholder="Team or Hague campus imagery"></image-slot>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fbfdfe;padding:clamp(48px,6vw,80px) clamp(18px,3vw,28px)">
+      <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:44px">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#a21c26;margin-bottom:18px">Based in The Hague</div>
+          <p style="font-size:18px;line-height:1.7;color:#4a5c66;margin:0">We work from HSD Campus and the Hague Humanity Hub - the security and justice tech cluster, in the city of the international tribunals.</p>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#a21c26;margin-bottom:18px">Mission</div>
+          <p style="font-size:18px;line-height:1.7;color:#4a5c66;margin:0">To strengthen justice systems through secure, responsible and future-proof technology.</p>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#a21c26;margin-bottom:18px">Partners</div>
+          <p style="font-size:18px;line-height:1.7;color:#4a5c66;margin:0">Lex Collective · Integrity Initiatives International · Heartland Initiative · HSD Campus · NBCC</p>
+        </div>
+      </div>
+      <sc-if value="{{ showAward }}">
+        <div style="max-width:1180px;margin:56px auto 0;background:#e3eff4;border-radius:18px;padding:clamp(24px,3.5vw,36px);display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+          <span style="background:#a21c26;color:#ffffff;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.08em;padding:9px 14px;border-radius:4px">WINNER · NBCC TECH AI AWARD 2025</span>
+          <span style="font-size:17px;color:#4a5c66">Awarded by the Netherlands British Chamber of Commerce. Sponsors: BSI, DLA Piper, Meta.</span>
+        </div>
+      </sc-if>
+    </section>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isContact }}">
+  <div>
+    <dc-import name="RLD-CTA" hint-size="100%,900px"></dc-import>
+  </div>
+  </sc-if>
+
+  <footer style="background:#131d22;padding:clamp(44px,5.5vw,72px) clamp(18px,3vw,28px) 40px">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="display:flex;justify-content:center;margin-bottom:36px">
+        <div style="background:#ffffff;border-radius:16px;padding:18px 26px;display:inline-flex">
+          <img src="redline-logo.png" alt="Redline Discovery" style="height:52px;width:auto;display:block" />
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:34px;flex-wrap:wrap;margin-bottom:36px">
+        <span style="font-size:16px;color:#c4d4dd;cursor:pointer" style-hover="color:#ffffff" onClick="{{ goProduct }}">Product</span>
+        <span style="font-size:16px;color:#c4d4dd;cursor:pointer" style-hover="color:#ffffff" onClick="{{ goLaw }}">For Law Firms</span>
+        <span style="font-size:16px;color:#c4d4dd;cursor:pointer" style-hover="color:#ffffff" onClick="{{ goPublic }}">Public Sector</span>
+        <span style="font-size:16px;color:#c4d4dd;cursor:pointer" style-hover="color:#ffffff" onClick="{{ goCases }}">Case Studies</span>
+        <span style="font-size:16px;color:#c4d4dd;cursor:pointer" style-hover="color:#ffffff" onClick="{{ goInsights }}">Insights</span>
+        <span style="font-size:16px;color:#c4d4dd;cursor:pointer" style-hover="color:#ffffff" onClick="{{ goAbout }}">About Us</span>
+        <span style="font-size:16px;color:#c4d4dd;cursor:pointer" style-hover="color:#ffffff" onClick="{{ goDemo }}">Book a Demo</span>
+      </div>
+      <div style="display:flex;justify-content:center;gap:18px;align-items:center;margin-bottom:48px;flex-wrap:wrap">
+        <a href="https://www.linkedin.com/company/redline-discovery" style="color:#85c3e8;font-family:'IBM Plex Mono',monospace;font-size:14px">LinkedIn</a>
+        <span style="color:#3d4f58">·</span>
+        <a href="https://medium.com/@redlinediscovery" style="color:#85c3e8;font-family:'IBM Plex Mono',monospace;font-size:14px">Medium</a>
+        <sc-if value="{{ showAward }}">
+          <span style="background:#a21c26;color:#ffffff;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:0.06em;padding:6px 11px;border-radius:4px;margin-left:8px">WINNER · NBCC TECH AI AWARD 2025</span>
+        </sc-if>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:36px;padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,0.12)">
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#ffffff;margin-bottom:12px"><span style="color:#a21c26">◈</span> United Kingdom</div>
+          <p style="font-size:15px;line-height:1.6;color:#a9bdc8;margin:0">86-90, Paul Street, EC2A 4NE, London, United Kingdom</p>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#ffffff;margin-bottom:12px"><span style="color:#a21c26">◈</span> Netherlands</div>
+          <p style="font-size:15px;line-height:1.6;color:#a9bdc8;margin:0">HSD Campus, Wilhelmina van Pruisenweg 104, 2595 AN, The Hague, The Netherlands</p>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#ffffff;margin-bottom:12px"><span style="color:#a21c26">◈</span> Canada</div>
+          <p style="font-size:15px;line-height:1.6;color:#a9bdc8;margin:0">Data Lab, Calgary, Alberta, Canada</p>
+        </div>
+        <div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;color:#ffffff;margin-bottom:12px"><span style="color:#a21c26">✉</span> E-mail</div>
+          <a href="mailto:investigation@redlinediscovery.com" style="font-size:15px;color:#85c3e8;word-break:break-all">investigation@redlinediscovery.com</a>
+        </div>
+      </div>
+      <div style="padding-top:28px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center">
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <a href="#" style="font-size:14px;color:#a9bdc8">Cookie Settings</a>
+          <a href="#" style="font-size:14px;color:#a9bdc8">Cookie Policy</a>
+          <a href="#" style="font-size:14px;color:#a9bdc8">Privacy Policy</a>
+        </div>
+        <span style="font-size:14px;color:#a9bdc8">Copyright 2026 Redline Discovery. All Rights Reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showAward&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;showFieldKit&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;problemsLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;accordion&quot;,&quot;grid&quot;],&quot;default&quot;:&quot;accordion&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
+class Component extends DCLogic {
+  state = { page: 'home', open: 0, topic: 'All', width: 1200, menuOpen: false };
+
+  componentDidMount() {
+    this.measure = () => {
+      this.setState({ width: window.innerWidth });
+    };
+    this.measure();
+    window.addEventListener('resize', this.measure);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.measure);
+  }
+
+  go(p) {
+    return () => {
+      this.setState({ page: p, menuOpen: false });
+      if (typeof window !== 'undefined') window.scrollTo({ top: 0 });
+    };
+  }
+
+  renderVals() {
+    const page = this.state.page;
+    const items = [
+      ['home', 'Home'], ['law', 'For Law Firms'], ['public', 'Public Sector'],
+      ['product', 'Product'], ['cases', 'Case Studies'], ['insights', 'Insights'],
+      ['about', 'About Us'], ['contact', 'Contact']
+    ];
+    const nav = items.map(([id, label]) => ({
+      id, label,
+      color: page === id ? '#131d22' : '#5a7484',
+      weight: page === id ? '700' : '400',
+      line: page === id ? '#a21c26' : 'transparent',
+      current: page === id ? 'page' : undefined,
+      go: this.go(id)
+    }));
+
+    const mobile = this.state.width < 1000;
+
+    const raw = [
+      ['01', 'Complex Investigations', "RLD's Forensic AI enhances investigations by working transparently"],
+      ['02', 'Fragmented Solutions', 'SPOTLIGHT is an all-in-one investigations solution that connects essential tools for teams at a better price'],
+      ['03', 'Teamwork & Collaboration', 'Get your full team working as one, with all the collaboration and investigation tools that you need to solve the case'],
+      ['04', 'Disparate Big & Small Data', 'We integrate data of all sizes. Our experts are here to assist with your data & analytics needs'],
+      ['05', 'Traditional Investigation Needs Modernizing', 'We offer training services and knowledge sharing to empower your team for the best results']
+    ];
+    const problems = raw.map(([num, title, body], i) => ({
+      num, title, body,
+      open: this.state.open === i,
+      icon: this.state.open === i ? '▲' : '▼',
+      toggle: () => this.setState(s => ({ open: s.open === i ? -1 : i }))
+    }));
+
+    const layout = this.props.problemsLayout ?? 'accordion';
+
+    const allArticles = [
+      ['OSINT', 'Sep 2026', 'Verifying open-source video before it reaches a tribunal', 'What a defensible verification workflow looks like when the source is a social media upload of unknown provenance.', '8 min'],
+      ['Forensic AI', 'Aug 2026', 'Explainability is not a feature, it is the evidence', 'If an AI-assisted finding cannot be explained to a court, it cannot be relied on. How we approach transparency in analysis.', '6 min'],
+      ['Dark web', 'Jul 2026', 'Tracing procurement networks across closed marketplaces', 'Methods and limits of monitoring illicit supply chains without compromising an investigation.', '9 min'],
+      ['Anti-corruption', 'Jun 2026', 'Following cross-border financial flows with incomplete records', 'Working from fragmentary banking and corporate data in jurisdictions that do not cooperate.', '7 min'],
+      ['Chain-of-custody', 'May 2026', 'Handling digital evidence so it survives challenge', 'Practical custody requirements for international tribunals, and where teams most often break them.', '5 min'],
+      ['Forensic AI', 'Apr 2026', 'Pattern detection across propaganda and cybercrime datasets', 'Where machine assistance genuinely changes the pace of an investigation, and where it does not.', '6 min']
+    ].map(([topic, date, title, excerpt, read], i) => ({
+      topic, date, title, excerpt, read, slot: 'rld-article-' + i,
+      href: 'https://medium.com/@redlinediscovery'
+    }));
+
+    const current = this.state.topic;
+    const articles = current === 'All' ? allArticles : allArticles.filter(a => a.topic === current);
+    const topicNames = ['All', ...Array.from(new Set(allArticles.map(a => a.topic)))];
+    const topics = topicNames.map(label => ({
+      label,
+      bg: label === current ? '#131d22' : '#ffffff',
+      fg: label === current ? '#ffffff' : '#5a7484',
+      border: label === current ? '#131d22' : 'rgba(90,116,132,0.28)',
+      pick: () => this.setState({ topic: label })
+    }));
+
+    const cases = [
+      ['Private sector', 'Europe -> Gulf', '#a21c26', 'Cross-border asset tracing for a European law firm',
+        'A litigation team needed to locate and evidence assets moved through three jurisdictions ahead of a freezing application.',
+        'Banking records, corporate registries and open-source material sat in separate tools with no shared timeline.',
+        'All material was consolidated into one case environment; financial analytics surfaced the transfer chain, and every artefact was logged under a single chain-of-custody.',
+        'A defensible evidence bundle was produced for the application, with the provenance of each document traceable end to end.'],
+      ['Public sector', 'International tribunal', '#5a7484', 'Building a case file from open-source conflict material',
+        'An accountability body was collecting large volumes of user-generated video and imagery from an active conflict.',
+        'Material arrived faster than it could be verified, and verification steps were recorded inconsistently across analysts.',
+        'Intake, verification and annotation were standardized in SPOTLIGHT, with AI-assisted deduplication and pattern detection over the corpus.',
+        'Verified material was organized against the elements of the alleged offences, in a form suitable for tribunal submission.'],
+      ['Civil society', 'Multi-country', '#5a7484', 'Field collection for a human rights documentation programme',
+        'Field staff were documenting incidents in locations with no reliable connectivity.',
+        'Notes and media were captured on personal devices and reconciled weeks later, weakening provenance.',
+        'Field capture was deployed offline, with structured metadata recorded at the point of collection and synced on return.',
+        'Incident records reached the central case file with intact provenance and far less manual reconciliation.'],
+      ['Private sector', 'United Kingdom', '#a21c26', 'Internal investigation into procurement irregularities',
+        'A corporate client suspected collusion between staff and a supplier across several years of contracts.',
+        'Millions of emails and documents, and a small review team working to a board deadline.',
+        'Analytics narrowed the review set to the relevant communications and payment patterns; reviewers worked in parallel in one environment.',
+        'The review completed inside the deadline, and findings were handed to external counsel with a full audit trail.']
+    ].map(([sector, region, tagBg, title, summary, challenge, approach, outcome]) => ({
+      sector, region, tagBg, title, summary, challenge, approach, outcome
+    }));
+
+    return {
+      nav, problems, articles, topics, cases,
+      isMobileNav: mobile,
+      isDesktopNav: !mobile,
+      menuOpen: mobile && this.state.menuOpen,
+      menuExpanded: this.state.menuOpen ? 'true' : 'false',
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen })),
+      isCases: page === 'cases',
+      goCases: this.go('cases'),
+      isHome: page === 'home',
+      isLaw: page === 'law',
+      isPublic: page === 'public',
+      isProduct: page === 'product',
+      isInsights: page === 'insights',
+      isAbout: page === 'about',
+      isContact: page === 'contact',
+      isAccordion: layout === 'accordion',
+      isGrid: layout === 'grid',
+      showAward: this.props.showAward ?? true,
+      showFieldKit: this.props.showFieldKit ?? true,
+      goHome: this.go('home'),
+      goLaw: this.go('law'),
+      goPublic: this.go('public'),
+      goProduct: this.go('product'),
+      goInsights: this.go('insights'),
+      goAbout: this.go('about'),
+      goContact: this.go('contact'),
+      goDemo: this.go('contact')
+    };
+  }
+}
+</script>
+</body>
+</html>
